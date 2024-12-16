@@ -1,0 +1,9 @@
+{
+  "name": "dns-query",
+  "version": "3.0.1",
+  "main": "./integration.js",
+  "private": true,
+  "dependencies": {
+    "async": "^3.2.6"
+  }
+}
