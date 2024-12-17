@@ -4,9 +4,9 @@
 
 > This integration runs in `On Demand Only` mode
 
-| ![overlay results with a domain](assets/overlay_domain.png) |![overlay results with an ip PTR](assets/overlay_ip_ptr.png)|![overlay results with an IP authority](assets/overlay_ip_authority.png)
-|:---:|:---:|:---:|
-|*Domain Query with Answers* |*IP Query with PTR Answer*| *IP Query with Authority section*|
+| ![Domain Query A Record](assets/overlay_domain_a.png) | ![Domain Query MX and SOA Record](assets/overlay_domain_mx.png) |![IP Query with PTR Answer](assets/overlay_ip_ptr.png)
+|:-------------------------------------------------------------:|:---------------------------------------------------------------:|:---:|
+|                    *Domain Query A Record*                    |                *Domain Query MX and SOA Record*                 | *IP Query with PTR Answer*|
 
 
 The Polarity DNS Query integration leverages the NodeJS Native DNS library to issue DNS queries to a specified DNS server.  The integration allows you to specify what type of query is run.  By default, the integration runs an A record query for domains and a PTR (reverse DNS) query for IP addresses.  
@@ -27,6 +27,19 @@ One or more query types to run. Each selected type requires a separate query to 
 ### Results Filter
 
 Choose which results are displayed. Defaults to always showing a result. Can also be set to only show results with an Answer section, or to only show results with an Answer or Authority section.
+
+## Troubleshooting
+
+### Reverse DNS Lookups
+
+In some cases you may not get results for reverse DNS lookup (including for known IP addresses such as 8.8.8.8).  This can be caused by an external DNS routing issue in your Docker container.
+
+If you run into this issue you may need to explicitly add a `dns` entry to your `docker-compose.yml` file under the `app` section.  For example:
+
+```yml
+dns:
+  - 8.8.8.8
+```
 
 ## About Polarity
 

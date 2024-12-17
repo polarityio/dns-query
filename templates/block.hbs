@@ -21,6 +21,10 @@
   <div>
     Domain not found
   </div>
+{{else if details.reverseDnsNotFound}}
+  <div>
+    No Answer data for IP Address {{block.entity.value}}
+  </div>  
 {{else}}
   <div>
     <span class="p-key">Server: </span>
