@@ -57,7 +57,7 @@ function getBlankAnswer(entity) {
       }, // since objects do not have a defined order to the keys, this array is used to
       // access the answer objects in the correct order.  We sort this so that answers
       // with data come first.
-      __order: ['PTR']
+      __order: ['reverse']
     };
   }
 
