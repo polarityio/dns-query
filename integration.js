@@ -9,6 +9,8 @@ const reverse = promisify(dns.reverse);
 const MAX_TASKS_AT_A_TIME = 5;
 const MAX_ENTITIES_AT_A_TIME = 2;
 
+let previousDns = null;
+
 let Logger;
 const DNS_ERRORS = {
   ENODATA: 'DNS server returned an answer with no data.',
@@ -109,8 +111,10 @@ async function doLookup(entities, options, cb) {
   Logger.trace({ entities, options }, 'doLookup');
   let lookupResults = [];
 
-  if (options.dns.length > 0) {
+  if (options.dns.length > 0 && previousDns !== options.dns) {
+    Logger.trace({ dnsServer: options.dns }, 'Setting DNS Server');
     dns.setServers([options.dns]);
+    previousDns = options.dns;
   }
 
   try {
@@ -138,11 +142,11 @@ async function doLookup(entities, options, cb) {
           } catch (queryErr) {
             const endTime = Date.now();
             answers.PTR.elapsedTime = endTime - startTime;
-            answers.PTR.error = enrichDnsError(queryErr);            
+            answers.PTR.error = enrichDnsError(queryErr);
             if (isThrowableError(answers.PTR.error)) {
               throw queryErr;
             }
-          } 
+          }
         });
       } else {
         // Default to A record lookup if no query types specified
@@ -193,16 +197,18 @@ async function doLookup(entities, options, cb) {
         });
       } else {
         const domainNotFound = isDomainNotFound(answers);
+        const reverseDnsNotFound = isReverseDnsNotFound(answers);
         lookupResults.push({
           entity,
           data: {
-            summary: _getSummaryTags(answers, domainNotFound, totalAnswers),
+            summary: _getSummaryTags(answers, domainNotFound, reverseDnsNotFound, totalAnswers),
             details: {
               answer: answers,
               totalAnswers,
               server: dns.getServers(),
               // Don't set this to true for reverse DNS lookups (IP lookups)
-              domainNotFound: entity.isDomain && domainNotFound
+              domainNotFound: entity.isDomain && domainNotFound,
+              reverseDnsNotFound: entity.isIP && reverseDnsNotFound
             }
           }
         });
@@ -231,6 +237,18 @@ function isDomainNotFound(answers) {
   });
 }
 
+function isReverseDnsNotFound(answers) {
+  // when looking up an IP, if the IP does not exist a "ENOTFOUND" error is returned
+  // The "syscall" property for the "ENOTFOUND" will be 'getHostByAddr'.  We need to check to
+  // make sure the "syscall" is not of type "getHostByAddr" as an ENOTFOUND error with this
+  // syscall occurs when the server cannot complete a reverse DNS lookup.
+  return Object.keys(answers).some((type) => {
+    return (
+      answers[type].error && answers[type].error.code === 'ENOTFOUND' && answers[type].error.syscall === 'getHostByAddr'
+    );
+  });
+}
+
 function enrichDnsError(dnsError) {
   let queryErrJson = parseErrorToReadableJson(dnsError);
 
@@ -239,16 +257,11 @@ function enrichDnsError(dnsError) {
     queryErrJson.detail = DNS_ERRORS[dnsError.code] || DNS_ERRORS[`E${dnsError.code}`];
   }
 
-  if (dnsError.code === 'ENOTFOUND' && dnsError.syscall === 'getHostByAddr') {
-    queryErrJson.detail =
-      'Unable to perform reverse DNS lookup.  This is typically caused by a DNS routing issue with Docker.';
-  }
-
   return queryErrJson;
 }
 
 function isThrowableError(dnsError) {
-  if (dnsError.code === 'ENODATA' || (dnsError.code === 'ENOTFOUND' && dnsError.syscall !== 'getHostByAddr')) {
+  if (dnsError.code === 'ENODATA' || dnsError.code === 'ENOTFOUND') {
     return false;
   }
   return true;
@@ -292,9 +305,13 @@ function sortAnswers(answers) {
  * @returns {string[]}
  * @private
  */
-function _getSummaryTags(answers, domainNotFound, totalAnswers) {
+function _getSummaryTags(answers, domainNotFound, reverseDnsNotFound, totalAnswers) {
   if (domainNotFound) {
     return ['Domain not found'];
+  }
+
+  if (reverseDnsNotFound) {
+    return ['IP not found'];
   }
 
   if (answers['A'] && answers['A'].results.length > 0) {

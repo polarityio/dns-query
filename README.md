@@ -28,6 +28,19 @@ One or more query types to run. Each selected type requires a separate query to 
 
 Choose which results are displayed. Defaults to always showing a result. Can also be set to only show results with an Answer section, or to only show results with an Answer or Authority section.
 
+## Troubleshooting
+
+### Reverse DNS Lookups
+
+In some cases you may not get results for reverse DNS lookup (including for known IP addresses such as 8.8.8.8).  This can be caused by an external DNS routing issue in your Docker container.
+
+If you run into this issue you may need to explicitly add a `dns` entry to your `docker-compose.yml` file under the `app` section.  For example:
+
+```yml
+dns:
+  - 8.8.8.8
+```
+
 ## About Polarity
 
 Polarity is a memory-augmentation platform that improves and accelerates analyst decision making.  For more information about the Polarity platform please see:
