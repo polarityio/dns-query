@@ -4,9 +4,9 @@
 
 > This integration runs in `On Demand Only` mode
 
-| ![overlay results with a domain](assets/overlay_domain.png) |![overlay results with an ip PTR](assets/overlay_ip_ptr.png)|![overlay results with an IP authority](assets/overlay_ip_authority.png)
-|:---:|:---:|:---:|
-|*Domain Query with Answers* |*IP Query with PTR Answer*| *IP Query with Authority section*|
+| ![Domain Query A Record](assets/overlay_domain_a.png) | ![Domain Query MX and SOA Record](assets/overlay_domain_mx.png) |![IP Query with PTR Answer](assets/overlay_ip_ptr.png)
+|:-------------------------------------------------------------:|:---------------------------------------------------------------:|:---:|
+|                    *Domain Query A Record*                    |                *Domain Query MX and SOA Record*                 | *IP Query with PTR Answer*|
 
 
 The Polarity DNS Query integration leverages the NodeJS Native DNS library to issue DNS queries to a specified DNS server.  The integration allows you to specify what type of query is run.  By default, the integration runs an A record query for domains and a PTR (reverse DNS) query for IP addresses.  
