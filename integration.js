@@ -190,7 +190,7 @@ async function doLookup(entities, options, cb) {
       await async.parallelLimit(tasks, MAX_TASKS_AT_A_TIME);
       answers = sortAnswers(answers);
 
-      if (isMiss(answers, options)) {
+      if (isMiss(totalAnswers, options)) {
         lookupResults.push({
           entity,
           data: null
@@ -267,9 +267,7 @@ function isThrowableError(dnsError) {
   return true;
 }
 
-function isMiss(result, options) {
-  const totalAnswers = result.totalAnswers;
-
+function isMiss(totalAnswers, options) {
   switch (options.resultsToShow.value) {
     case 'always':
       return false;
