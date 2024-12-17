@@ -50,14 +50,14 @@ function getBlankAnswer(entity) {
   // IP Addresses can only do reverse DNS lookups which is of type PTR
   if (entity.isIP) {
     return {
-      reverse: {
+      PTR: {
         results: [],
         error: null,
         searched: true
       }, // since objects do not have a defined order to the keys, this array is used to
       // access the answer objects in the correct order.  We sort this so that answers
       // with data come first.
-      __order: ['reverse']
+      __order: ['PTR']
     };
   }
 
@@ -132,14 +132,14 @@ async function doLookup(entities, options, cb) {
             const hostnames = await reverse(entity.value);
             const endTime = Date.now();
             const elapsedTime = endTime - startTime; // Time in milliseconds
-            answers.reverse.results = hostnames;
-            answers.reverse.elapsedTime = elapsedTime;
+            answers.PTR.results = hostnames;
+            answers.PTR.elapsedTime = elapsedTime;
             totalAnswers += hostnames.length;
           } catch (queryErr) {
             const endTime = Date.now();
-            answers.reverse.elapsedTime = endTime - startTime;
-            answers.reverse.error = enrichDnsError(queryErr);            
-            if (isThrowableError(answers.reverse.error)) {
+            answers.PTR.elapsedTime = endTime - startTime;
+            answers.PTR.error = enrichDnsError(queryErr);            
+            if (isThrowableError(answers.PTR.error)) {
               throw queryErr;
             }
           } 
