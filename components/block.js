@@ -33,6 +33,7 @@ polarity.export = PolarityComponent.extend({
         this.sendIntegrationMessage(payload)
           .then((result) => {
             this.set(`details.answer.${type}.results`, result.answer.results);
+            this.set(`details.answer.${type}.elapsedTime`, result.answer.elapsedTime);
             this.set('details.totalAnswers', this.get('details.totalAnswers') + result.answer.results.length);
             if (result.authority) {
               const currentAuthority = this.get('details.authority');

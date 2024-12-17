@@ -127,16 +127,22 @@ async function doLookup(entities, options, cb) {
 
       if (entity.isIP) {
         tasks.push(async () => {
+          const startTime = Date.now();
           try {
             const hostnames = await reverse(entity.value);
+            const endTime = Date.now();
+            const elapsedTime = endTime - startTime; // Time in milliseconds
             answers.reverse.results = hostnames;
+            answers.reverse.elapsedTime = elapsedTime;
             totalAnswers += hostnames.length;
           } catch (queryErr) {
-            answers.reverse.error = enrichDnsError(queryErr);
-            if(isThrowableError(answers.reverse.error)){
+            const endTime = Date.now();
+            answers.reverse.elapsedTime = endTime - startTime;
+            answers.reverse.error = enrichDnsError(queryErr);            
+            if (isThrowableError(answers.reverse.error)) {
               throw queryErr;
             }
-          }
+          } 
         });
       } else {
         // Default to A record lookup if no query types specified
@@ -148,6 +154,7 @@ async function doLookup(entities, options, cb) {
 
         options.queryTypes.forEach((type) => {
           tasks.push(async () => {
+            const startTime = Date.now();
             try {
               let results;
               if (type.value === 'A') {
@@ -157,11 +164,16 @@ async function doLookup(entities, options, cb) {
               } else {
                 results = await resolve(entity.value, type.value);
               }
+              const endTime = Date.now();
+              const elapsedTime = endTime - startTime; // Time in milliseconds
               answers[type.value].results = Array.isArray(results) ? results : [results];
+              answers[type.value].elapsedTime = elapsedTime;
               totalAnswers += answers[type.value].results.length;
             } catch (queryErr) {
+              const endTime = Date.now();
+              answers[type.value].elapsedTime = endTime - startTime;
               answers[type.value].error = enrichDnsError(queryErr);
-              if(isThrowableError(answers[type.value].error)){
+              if (isThrowableError(answers[type.value].error)) {
                 throw queryErr;
               }
             } finally {
@@ -207,7 +219,7 @@ async function doLookup(entities, options, cb) {
 
 function isDomainNotFound(answers) {
   // when looking up a domain, if the domain does not exist a "ENOTFOUND" error is returned
-  // The "syscall" property for the "ENOTFOUND" will be the query type.  We need to check to 
+  // The "syscall" property for the "ENOTFOUND" will be the query type.  We need to check to
   // make sure the "syscall" is not of type "getHostByAddr" as an ENOTFOUND error with this
   // syscall occurs when the server cannot complete a reverse DNS lookup.
   return Object.keys(answers).some((type) => {
@@ -226,16 +238,17 @@ function enrichDnsError(dnsError) {
     queryErrJson.message = DNS_ERRORS[dnsError.code] || DNS_ERRORS[`E${dnsError.code}`];
     queryErrJson.detail = DNS_ERRORS[dnsError.code] || DNS_ERRORS[`E${dnsError.code}`];
   }
-  
-  if(dnsError.code === 'ENOTFOUND' && dnsError.syscall === 'getHostByAddr'){
-    queryErrJson.detail = 'Unable to perform reverse DNS lookup.  This is typically caused by a DNS routing issue with Docker.';  
+
+  if (dnsError.code === 'ENOTFOUND' && dnsError.syscall === 'getHostByAddr') {
+    queryErrJson.detail =
+      'Unable to perform reverse DNS lookup.  This is typically caused by a DNS routing issue with Docker.';
   }
-  
+
   return queryErrJson;
 }
 
-function isThrowableError(dnsError){
-  if(dnsError.code === 'ENODATA' || (dnsError.code === 'ENOTFOUND' && dnsError.syscall !== 'getHostByAddr')){
+function isThrowableError(dnsError) {
+  if (dnsError.code === 'ENODATA' || (dnsError.code === 'ENOTFOUND' && dnsError.syscall !== 'getHostByAddr')) {
     return false;
   }
   return true;

@@ -14,15 +14,15 @@ The Polarity DNS Query integration leverages the NodeJS Native DNS library to is
 ## DNS Query Integration Options
 
 ### DNS Server
-The DNS Server (host or IP) to perform lookups against. If left blank, the Polarity Server's default DNS server will be used. If an invalid or unreachable DNS Server is provided your `dig` requests will eventually time out. Defaults to `8.8.8.8`.
+Sets the IP address and port of the server to be used when performing DNS resolution. If the port is the IANA default DNS port (53) it can be omitted. If left blank, the Polarity Server's default DNS server will be used. Defaults to `8.8.8.8`.
 
 ### Private IPs Only
 
-If checked, the integration will only look up private (RFC-1918) IP addresses. Domains will still be looked up unless you turn domains off via the "Manage Integration Data" option.
+If checked, the integration will only look up private (RFC-1918) IP addresses. Domains will still be looked up unless you turn domains off via the "Data Types" settings page.
 
 ### DNS Query Types for Domains
 
-One or more query types to run via dig.  Each selected type requires a separate query to your DNS server.  If no types are selected an A Record query will be issued.  Query types only apply to domains as IPs will always be a PTR query.
+One or more query types to run. Each selected type requires a separate query to your DNS server. If no types are selected an A Record query will be issued. Query types only apply to domains as IPs will always be a reverse lookup.
 
 ### Results Filter
 

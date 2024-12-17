@@ -55,6 +55,11 @@
                 {{/if}}
               </div>
               <div class="d-flex align-items-center">
+                {{#if answer.elapsedTime}}
+                  <div class="p-footnote mr-1">
+                    {{answer.elapsedTime}} ms
+                  </div>
+                {{/if}}
                 {{#if answer.__show}}
                   {{fa-icon icon="chevron-up" fixedWidth=true}}
                 {{else}}

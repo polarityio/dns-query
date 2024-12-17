@@ -1,9 +1,9 @@
 {
   "name": "DNS Query",
   "acronym": "DNS",
-  "description": "Provides DNS lookup capabilities",
+  "description": "Query a DNS server for hostname name resolution or IP address reverse name resolution",
   "logging": {
-    "level": "trace"
+    "level": "info"
   },
   "styles": ["./styles/style.less"],
   "entityTypes": ["domain", "IPv4"],
@@ -28,7 +28,7 @@
     {
       "key": "dns",
       "name": "DNS Server",
-      "description": "A comma delimited list of one or more DNS Servers (host or IP) to perform lookups against.  If provided an IP, an optional port can be included. If left blank, the Polarity Server's default DNS server will be used.  Defaults to `8.8.8.8`.",
+      "description": "Sets the IP address and port of the server to be used when performing DNS resolution. If the port is the IANA default DNS port (53) it can be omitted. If left blank, the Polarity Server's default DNS server will be used. Defaults to `8.8.8.8`.",
       "default": "8.8.8.8",
       "type": "text",
       "userCanEdit": false,
@@ -91,7 +91,7 @@
     {
       "key": "resultsToShow",
       "name": "Results Filter",
-      "description": "Choose which results are displayed.  Defaults to always showing a result.  Can also be set to only show results with an Answer section, or to only show results with an Answer or Authority section.",
+      "description": "Choose which results are displayed.  Defaults to always showing a result.  Can also be set to only show results with Answer data.",
       "default": {
         "value": "always",
         "display": "Always show a result"
