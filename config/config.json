@@ -1,4 +1,5 @@
 {
+  "polarityIntegrationUuid": "ee1769f0-bc42-11ef-acb7-df7c21f886b9",
   "name": "DNS Query",
   "acronym": "DNS",
   "description": "Query a DNS server for hostname name resolution or IP address reverse name resolution",
@@ -7,6 +8,7 @@
   },
   "styles": ["./styles/style.less"],
   "entityTypes": ["domain", "IPv4"],
+  "dataTypes": ["domain", "IPv4"],
   "defaultColor": "light-gray",
   "block": {
     "component": {
