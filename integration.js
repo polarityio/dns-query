@@ -174,6 +174,7 @@ async function doLookup(entities, options, cb) {
               answers[type.value].elapsedTime = elapsedTime;
               totalAnswers += answers[type.value].results.length;
             } catch (queryErr) {
+              Logger.error(queryErr, 'DNS Resolve Error');
               const endTime = Date.now();
               answers[type.value].elapsedTime = endTime - startTime;
               answers[type.value].error = enrichDnsError(queryErr);
@@ -261,7 +262,7 @@ function enrichDnsError(dnsError) {
 }
 
 function isThrowableError(dnsError) {
-  if (dnsError.code === 'ENODATA' || dnsError.code === 'ENOTFOUND') {
+  if (dnsError.code === 'ENODATA' || dnsError.code === 'ENOTFOUND' || dnsError.code === 'EBADRESP') {
     return false;
   }
   return true;
@@ -364,12 +365,12 @@ function onMessage(payload, options, cb) {
 
       doLookup([payload.entity], singleTypeOptions, (err, lookupResults) => {
         if (err) {
-          Logger.error({ err }, 'Error retrying lookup');
+          Logger.error({ err }, 'Error running query');
           cb(err);
         } else {
           Logger.trace({ payload, lookupResults }, 'onMessage');
           cb(null, {
-            answer: lookupResults[0].data.details.answer[payload.type]
+            answer: lookupResults[0].data ? lookupResults[0].data.details.answer[payload.type] : null
           });
         }
       });
