@@ -7,9 +7,9 @@ polarity.export = PolarityComponent.extend({
     this._super(...arguments);
     this.initTypes();
   },
-  initTypes: function(){
+  initTypes: function () {
     const types = this.get('details.answer.__order');
-    if(types){
+    if (types) {
       types.forEach((type) => {
         if (this.get(`details.answer.${type}.results.length`) > 0) {
           this.set(`details.answer.${type}.__show`, true);
@@ -17,7 +17,7 @@ polarity.export = PolarityComponent.extend({
       });
     }
   },
-  
+
   actions: {
     toggleAnswerType: function (type) {
       this.toggleProperty(`details.answer.${type}.__show`);
@@ -32,22 +32,12 @@ polarity.export = PolarityComponent.extend({
         this.set(`details.answer.${type}.__error`, '');
         this.sendIntegrationMessage(payload)
           .then((result) => {
-            this.set(`details.answer.${type}.results`, result.answer.results);
-            this.set(`details.answer.${type}.elapsedTime`, result.answer.elapsedTime);
-            this.set('details.totalAnswers', this.get('details.totalAnswers') + result.answer.results.length);
-            if (result.authority) {
-              const currentAuthority = this.get('details.authority');
-              if (Array.isArray(currentAuthority)) {
-                this.set('details.authority', currentAuthority.concat(result.authority));
-              } else {
-                this.set(`details.authority`, result.authority);
-              }
-            }
-
-            if (result.header) {
-              const currentHeader = this.get('details.header');
-              result.header.push('\n');
-              this.set('details.header', result.header.concat(currentHeader));
+            if (result.answer) {
+              this.set(`details.answer.${type}.results`, result.answer.results);
+              this.set(`details.answer.${type}.elapsedTime`, result.answer.elapsedTime);
+              this.set('details.totalAnswers', this.get('details.totalAnswers') + result.answer.results.length);
+            } else {
+              this.set(`details.answer.${type}.results`, []);
             }
             this.set(`details.answer.${type}.searched`, true);
           })
