@@ -1,9 +1,18 @@
 {
   "name": "dns-query",
   "version": "3.0.6",
-  "main": "./integration.js",
+  "main": "./dist/integration.js",
+  "scripts": {
+    "build": "tsc"
+  },
   "private": true,
   "dependencies": {
-    "async": "^3.2.6"
+    "async": "^3.2.6",
+    "polarity-integration-utils": "file:../polarity-integration-utils/polarity-integration-utils-3.0.0.tgz"
+  },
+  "devDependencies": {
+    "@types/async": "^3.2.25",
+    "@types/node": "^24.9.2",
+    "typescript": "^5.9.3"
   }
 }
