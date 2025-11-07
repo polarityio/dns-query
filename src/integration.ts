@@ -448,8 +448,9 @@ async function onMessage(payload: any, options: Options, context: Context) {
   }
 }
 
-module.exports = {
-  doLookup,
-  startup,
-  onMessage
-};
+function validateOptions(options: Options) {
+  const errors: string[] = [];
+  return errors;
+}
+
+export { doLookup, startup, onMessage, validateOptions };

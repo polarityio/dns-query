@@ -1,6 +1,6 @@
 {
   "name": "dns-query",
-  "version": "3.0.6",
+  "version": "4.0.0",
   "main": "./dist/integration.js",
   "scripts": {
     "build": "tsc"
