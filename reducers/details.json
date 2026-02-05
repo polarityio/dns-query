@@ -1,0 +1,41 @@
+{
+  "root": {
+    "path": "",
+    "on_null": "return_empty"
+  },
+  "pipeline": [
+    {
+      "op": "copy",
+      "from": "answer.A.results[].address",
+      "to": "reduced_results.a_addresses"
+    },
+    {
+      "op": "copy",
+      "from": "answer.AAAA.results[].address",
+      "to": "reduced_results.aaaa_addresses"
+    },
+    {
+      "op": "copy",
+      "from": "answer.MX.results[].exchange",
+      "to": "reduced_results.mx_exchanges"
+    },
+    {
+      "op": "copy",
+      "from": "answer.SOA.results[].nsname",
+      "to": "reduced_results.soa_nsnames"
+    },
+    {
+      "op": "copy",
+      "from": "answer.PTR.results",
+      "to": "reduced_results.ptr_hostnames"
+    },
+    {
+      "op": "prune",
+      "strategy": "empty_values",
+      "target": "reduced_results"
+    }
+  ],
+  "output": {
+    "result": "$working.reduced_results"
+  }
+}

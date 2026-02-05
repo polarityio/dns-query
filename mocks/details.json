@@ -1,0 +1,111 @@
+{
+  "answer": {
+    "A": {
+      "results": [
+        {
+          "address": "93.184.216.34",
+          "ttl": 3600
+        },
+        {
+          "address": "93.184.216.35",
+          "ttl": 3600
+        }
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 45
+    },
+    "AAAA": {
+      "results": [
+        {
+          "address": "2606:2800:220:1:248:1893:25c8:1946",
+          "ttl": 3600
+        }
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 52
+    },
+    "MX": {
+      "results": [
+        {
+          "exchange": "mail.example.com",
+          "priority": 10
+        },
+        {
+          "exchange": "mail2.example.com",
+          "priority": 20
+        }
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 61
+    },
+    "SOA": {
+      "results": [
+        {
+          "nsname": "ns1.example.com",
+          "hostmaster": "admin.example.com",
+          "serial": 2024011601,
+          "refresh": 7200,
+          "retry": 3600,
+          "expire": 1209600,
+          "minttl": 86400
+        }
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 58
+    },
+    "PTR": {
+      "results": [
+        "example.com",
+        "www.example.com"
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 72
+    },
+    "CNAME": {
+      "results": [],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 38
+    },
+    "TXT": {
+      "results": [
+        "v=spf1 include:_spf.example.com ~all",
+        "google-site-verification=abc123xyz"
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 44
+    },
+    "NS": {
+      "results": [
+        "ns1.example.com",
+        "ns2.example.com"
+      ],
+      "error": null,
+      "searched": true,
+      "elapsedTime": 49
+    },
+    "__order": [
+      "A",
+      "AAAA",
+      "MX",
+      "SOA",
+      "PTR",
+      "CNAME",
+      "TXT",
+      "NS"
+    ]
+  },
+  "totalAnswers": 11,
+  "server": [
+    "8.8.8.8",
+    "8.8.4.4"
+  ],
+  "domainNotFound": false,
+  "reverseDnsNotFound": false
+}
